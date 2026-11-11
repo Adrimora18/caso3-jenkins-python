@@ -1,0 +1,25 @@
+services:
+  jenkins:
+    build:
+      context: ./jenkins
+    ports:
+      - "8081:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - despliegue:/opt/despliegue
+    restart: unless-stopped
+
+  servidor-pruebas:
+    image: python:3.12-slim
+    working_dir: /servidor
+    command: ["python", "-u", "servidor_pruebas.py"]
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server:/servidor:ro
+      - despliegue:/despliegue:ro
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:
+  despliegue:
